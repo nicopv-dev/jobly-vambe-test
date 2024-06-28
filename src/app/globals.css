@@ -56,4 +56,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  h2,
+  button,
+  aside {
+    transition: all 0.2s ease-in-out;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-xl bg-gray-300;
+  }
+
+  .task > ::-webkit-scrollbar-thumb {
+    @apply rounded-xl bg-sky-500;
+  }
 }
