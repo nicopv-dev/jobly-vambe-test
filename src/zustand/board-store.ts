@@ -3,6 +3,7 @@ import ColumnType from '@/types/column';
 import { TaskStatus } from '@/types/task_status';
 import { TASKS } from '@/utils/constants';
 import Board from '@/types/board';
+import { arrayMove } from '@dnd-kit/sortable';
 
 interface State {
   board: {
@@ -15,9 +16,9 @@ interface Action {
   removeTask: (taskId: number) => void;
   moveTask: (
     taskId: number,
+    targetTaskId: number,
     sourceStatus: TaskStatus,
-    targetStatus: TaskStatus,
-    toIndex: number
+    targetStatus: TaskStatus
   ) => void;
 }
 
@@ -61,36 +62,68 @@ const boardStore = create<State & Action>((set) => ({
       };
 
       return {
-        board: {
-          columns: updatedColumns,
-        },
+        board,
       };
     });
   },
   moveTask: (
     taskId: number,
+    targetId: number,
     sourceStatus: TaskStatus,
-    targetStatus: TaskStatus,
-    toIndex: number
+    targetStatus: TaskStatus
   ) => {
     set((state) => {
       const updatedColumns = new Map(state.board.columns);
 
-      const sourceColumn = updatedColumns.get(sourceStatus);
-      const targetColumn = updatedColumns.get(targetStatus);
+      const activeIndex = updatedColumns
+        .get(sourceStatus)!
+        .tasks.findIndex((t) => t.id === taskId);
+      const targetIndex = updatedColumns
+        .get(targetStatus)!
+        .tasks.findIndex((t) => t.id === targetId);
 
-      if (sourceColumn && targetColumn) {
-        console.log('updating columns');
-        const taskIndex = sourceColumn.tasks.findIndex(
-          (task) => task.id === taskId
+      console.log(`${activeIndex} -> ${targetIndex}`);
+      console.log(sourceStatus, targetStatus);
+      if (sourceStatus === targetStatus) {
+        const array = arrayMove(
+          updatedColumns.get(sourceStatus)!.tasks,
+          activeIndex,
+          targetIndex
         );
-        console.log('taskIndex', taskIndex);
-        if (taskIndex !== -1) {
-          const [movedTask] = targetColumn.tasks.splice(taskIndex, 1);
-          movedTask.status = targetStatus;
-          targetColumn.tasks.splice(toIndex, 0, movedTask);
-        }
+
+        updatedColumns.set(targetStatus, {
+          status: targetStatus,
+          tasks: array,
+        });
+
+        return {
+          board: {
+            columns: updatedColumns,
+          },
+        };
       }
+
+      const sourceTasks = updatedColumns.get(sourceStatus)!.tasks;
+
+      // remove source task from previous column
+      updatedColumns.set(sourceStatus, {
+        status: sourceStatus,
+        tasks: sourceTasks.filter((item) => item.id !== taskId),
+      });
+
+      // change task status to new status
+      const updatedTask = sourceTasks[activeIndex];
+      updatedTask.status = targetStatus;
+      console.log(updatedTask);
+
+      updatedColumns.set(targetStatus, {
+        status: targetStatus,
+        tasks: [
+          ...updatedColumns.get(targetStatus)!.tasks.slice(0, targetIndex),
+          updatedTask,
+          ...updatedColumns.get(targetStatus)!.tasks.slice(targetIndex),
+        ],
+      });
 
       return {
         board: {

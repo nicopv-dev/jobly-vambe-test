@@ -4,6 +4,7 @@ import {
   DndContext,
   DragOverlay,
   DragStartEvent,
+  KeyboardSensor,
   PointerSensor,
   closestCorners,
   useSensor,
@@ -11,7 +12,10 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import Column from './column';
-import { SortableContext } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
 import { useEffect, useMemo, useState } from 'react';
 import { useBoardStore } from '@/zustand/board-store';
 import Task from '@/types/task';
@@ -19,6 +23,7 @@ import { createPortal } from 'react-dom';
 import Card from './card';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/zustand/theme-store';
+import ColumnType from '@/types/column';
 
 export default function Board() {
   const { loadBoard, board, moveTask } = useBoardStore();
@@ -31,10 +36,10 @@ export default function Board() {
       activationConstraint: {
         distance: 10,
       },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
-    // useSensor(KeyboardSensor, {
-    //   coordinateGetter: sortableKeyboardCoordinates,
-    // })
   );
 
   const columnsIds = useMemo(
@@ -71,70 +76,39 @@ export default function Board() {
 
     if (!isActiveATask) return;
 
-    console.log(event);
+    if (isActiveATask === isOverATask) {
+      const sourceData = active.data.current?.task as Task;
+      const targetData = over.data.current?.task as Task;
 
-    const sourceData = active.data.current?.task as Task;
-    const targetData = over.data.current?.task as Task;
-
-    if (!sourceData || !targetData) return;
-
-    const sourceColumn = board.columns.get(sourceData.status);
-    const targetColumn = board.columns.get(targetData.status);
-
-    if (!sourceColumn || !targetColumn) return;
-
-    console.log(`Move from ${sourceData.status} -> ${targetData.status}`);
-
-    // // move task in the same column
-    if (sourceData.status === targetData.status) {
-      console.log('move same column');
-
-      const taskIndex = sourceColumn.tasks.findIndex(
-        (task) => task.id === activeId
+      moveTask(
+        sourceData.id,
+        targetData.id,
+        sourceData.status,
+        targetData.status
       );
-      const toIndex = targetColumn.tasks.findIndex(
-        (task) => task.id === targetData.id
-      );
+    }
 
-      const tasks = Array.from(targetColumn.tasks);
-      const [movedTask] = tasks.splice(taskIndex, 1);
-      tasks.splice(toIndex, 0, movedTask);
+    const isOverAColumn = over.data.current?.type === 'column';
 
-      const updatedColumns = new Map(board.columns);
-      updatedColumns.set(sourceData.status, { ...sourceColumn, tasks });
+    if (isActiveATask && isOverAColumn) {
+      const column = over.data.current?.column as ColumnType;
 
-      useBoardStore.setState({ board: { columns: updatedColumns } });
-    } else {
-      console.log('move different column');
+      const sourceData = active.data.current?.task as Task;
 
-      const sourceTaskIndex = sourceColumn.tasks.findIndex(
-        (task) => task.id === activeId
-      );
+      const updatedColumn = new Map(board.columns);
+      const newTasks = updatedColumn.get(sourceData.status)?.tasks;
 
-      const targetTaskIndex = targetColumn.tasks.findIndex(
-        (task) => task.id === targetData.id
-      );
-      const sourceTasks = Array.from(sourceColumn.tasks);
-      console.log(sourceTasks);
-      const [movedTask] = sourceTasks.splice(sourceTaskIndex, 1);
-
-      console.log(movedTask);
-
-      const targetTasks = Array.from(targetColumn.tasks);
-      targetTasks.splice(targetTaskIndex, 0, movedTask);
-
-      let updatedColumns = new Map(board.columns);
-
-      updatedColumns.set(sourceData.status, {
-        ...sourceColumn,
-        tasks: sourceTasks,
+      updatedColumn.set(sourceData.status, {
+        status: sourceData.status,
+        tasks: newTasks!.filter((item) => item.id !== sourceData.id),
       });
-      updatedColumns.set(targetData.status, {
-        ...targetColumn,
-        tasks: targetTasks,
+      sourceData.status = column.status;
+      updatedColumn.set(column.status, {
+        ...column,
+        tasks: [...column.tasks, sourceData],
       });
 
-      useBoardStore.setState({ board: { columns: updatedColumns } });
+      useBoardStore.setState({ board: { columns: updatedColumn } });
     }
   };
 
