@@ -9,6 +9,11 @@ import {
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
+/**
+ * This component rendering a sibar with the navegation (only design).
+ *
+ * @returns {React.ReactNode} The sidebar component.
+ */
 export default function Sidebar() {
   return (
     <aside

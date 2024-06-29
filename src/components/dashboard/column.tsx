@@ -11,28 +11,34 @@ import { CSS } from '@dnd-kit/utilities';
 import Task from '@/types/task';
 
 interface ColumnProps {
+  /**
+   * Column type to render into component.
+   */
   column: ColumnType;
+  /**
+   * The status column tasks
+   */
   tasks: Task[];
 }
 
+/**
+ * This component rendering a status (To do, In Progress and Done) column with all tasks.
+ *
+ * @param {ColumnProps} props - The props for the component.
+ * @returns {React.ReactNode} The column component.
+ */
 export default function Column({ column, tasks }: ColumnProps) {
   const { status } = column;
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    activeIndex,
-  } = useSortable({
-    id: status,
-    data: {
-      type: 'column',
-      column,
-    },
-    disabled: true,
-  });
+  const { setNodeRef, attributes, listeners, transform, transition } =
+    useSortable({
+      id: status,
+      data: {
+        type: 'column',
+        column,
+      },
+      disabled: true,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),

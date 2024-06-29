@@ -25,6 +25,11 @@ import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/zustand/theme-store';
 import ColumnType from '@/types/column';
 
+/**
+ * This component rendering a board kanban.
+ *
+ * @returns {React.ReactNode} The card component.
+ */
 export default function Board() {
   const { loadBoard, board, moveTask } = useBoardStore();
   const [activeTask, setActiveTask] = useState<Task | null>(null);

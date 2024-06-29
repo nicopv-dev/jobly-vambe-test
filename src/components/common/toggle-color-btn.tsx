@@ -5,6 +5,11 @@ import { Button } from '../ui/button';
 import { useThemeStore } from '@/zustand/theme-store';
 import { useEffect } from 'react';
 
+/**
+ * This component rendering a button for the toggle light and dark mode.
+ *
+ * @returns {React.ReactNode} The button component.
+ */
 export default function ToggleColorButton() {
   const { theme, setTheme } = useThemeStore();
 

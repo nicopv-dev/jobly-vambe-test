@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Task from '@/types/task';
 import { motion } from 'framer-motion';
 import { MultiplicationSignIcon, TickDouble02Icon } from 'hugeicons-react';
@@ -12,9 +12,18 @@ import { TrashIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CardProps {
+  /**
+   * The task to be displayed in the card.
+   */
   task: Task;
 }
 
+/**
+ * Tihs component rendering a card with the task information.
+ *
+ * @param {CardProps} props - The props for the component.
+ * @returns {React.ReactNode} The card component.
+ */
 export default function Card({ task }: CardProps) {
   const { id, description, title } = task;
   const [isEditable, setIsEditable] = useState<boolean>(false);
