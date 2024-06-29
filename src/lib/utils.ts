@@ -2,10 +2,22 @@ import { TaskStatus } from '@/types/task_status';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+/**
+ * This function merge classes from tailwind and clsx
+ *
+ * @param {ClassValue[]} inputs The classes to merge.
+ * @returns {string} A string with all classes merged.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * This function return the className color by status
+ *
+ * @param {TaskStatus} status The status task to evaluate
+ * @returns {string} A string with all style classes
+ */
 export function getColorByStatus(status: TaskStatus): string {
   switch (status) {
     case 'To do':

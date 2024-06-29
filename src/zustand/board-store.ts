@@ -4,6 +4,7 @@ import { TaskStatus } from '@/types/task_status';
 import { TASKS } from '@/utils/constants';
 import Board from '@/types/board';
 import { arrayMove } from '@dnd-kit/sortable';
+import Task from '@/types/task';
 
 interface State {
   board: {
@@ -20,6 +21,7 @@ interface Action {
     sourceStatus: TaskStatus,
     targetStatus: TaskStatus
   ) => void;
+  addTask: (task: Task) => void;
 }
 
 const boardStore = create<State & Action>((set) => ({
@@ -82,8 +84,6 @@ const boardStore = create<State & Action>((set) => ({
         .get(targetStatus)!
         .tasks.findIndex((t) => t.id === targetId);
 
-      console.log(`${activeIndex} -> ${targetIndex}`);
-      console.log(sourceStatus, targetStatus);
       if (sourceStatus === targetStatus) {
         const array = arrayMove(
           updatedColumns.get(sourceStatus)!.tasks,
@@ -114,7 +114,6 @@ const boardStore = create<State & Action>((set) => ({
       // change task status to new status
       const updatedTask = sourceTasks[activeIndex];
       updatedTask.status = targetStatus;
-      console.log(updatedTask);
 
       updatedColumns.set(targetStatus, {
         status: targetStatus,
@@ -124,6 +123,27 @@ const boardStore = create<State & Action>((set) => ({
           ...updatedColumns.get(targetStatus)!.tasks.slice(targetIndex),
         ],
       });
+
+      return {
+        board: {
+          columns: updatedColumns,
+        },
+      };
+    });
+  },
+
+  addTask: (task) => {
+    set((state) => {
+      const updatedColumns = new Map(state.board.columns);
+
+      if (!updatedColumns.get(task.status)) {
+        updatedColumns.set(task.status, {
+          status: task.status,
+          tasks: [],
+        });
+      }
+
+      updatedColumns.get(task.status)!.tasks.push(task);
 
       return {
         board: {
