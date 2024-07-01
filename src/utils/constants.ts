@@ -5,9 +5,7 @@ export const TASKS: Task[] = [
     id: 1,
     title: 'Task 1',
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
+    suscipit.`,
     status: 'To do',
     position: 1,
   },
@@ -15,9 +13,7 @@ export const TASKS: Task[] = [
     id: 2,
     title: 'Task 2',
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
+    suscipit.`,
     status: 'In progress',
     position: 1,
   },
@@ -25,9 +21,7 @@ export const TASKS: Task[] = [
     id: 3,
     title: 'Task 3',
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
+    suscipit.`,
     status: 'Done',
     position: 1,
   },
@@ -35,9 +29,7 @@ export const TASKS: Task[] = [
     id: 4,
     title: 'Task 4',
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
+    suscipit.`,
     status: 'To do',
     position: 2,
   },
@@ -45,9 +37,7 @@ export const TASKS: Task[] = [
     id: 5,
     title: 'Task 5',
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
+    suscipit.`,
     status: 'To do',
     position: 3,
   },

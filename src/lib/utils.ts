@@ -30,3 +30,7 @@ export function getColorByStatus(status: TaskStatus): string {
       return 'text-gray-400';
   }
 }
+
+export function generateRandomId() {
+  return Math.floor(Math.random() * 10001);
+}

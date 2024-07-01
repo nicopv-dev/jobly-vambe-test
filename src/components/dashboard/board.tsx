@@ -118,7 +118,7 @@ export default function Board() {
   };
 
   return (
-    <div className="w-full space-y-4 py-4">
+    <div className="w-full space-y-4 py-4 sm:py-10">
       <h2
         className={cn('text-2xl font-semibold', {
           'text-white': theme === 'dark',
@@ -135,7 +135,7 @@ export default function Board() {
         <div className="space-y-4">
           {/* <h3>Board</h3> */}
 
-          <div className="grid h-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grow auto-cols-max grid-flow-col gap-4 overflow-x-auto overflow-y-auto py-4">
             <SortableContext items={columnsIds}>
               {Array.from(board.columns.entries()).map(([_, col], index) => (
                 <Column key={index} column={col} tasks={col.tasks} />

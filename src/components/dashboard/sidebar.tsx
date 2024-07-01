@@ -8,6 +8,7 @@ import {
 } from 'hugeicons-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import ToggleColorButton from '../common/toggle-color-btn';
 
 /**
  * This component rendering a sibar with the navegation (only design).
@@ -18,10 +19,10 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 hidden h-screen overflow-y-hidden border-r border-r-gray-200 bg-white p-4 dark:border-r-gray-900 dark:bg-gray-900 xl:block'
+        'fixed left-0 top-0 hidden h-screen w-20 flex-col justify-between overflow-y-hidden border-r border-r-gray-200 bg-white p-4 dark:border-r-gray-900 dark:bg-gray-900 md:flex'
       )}
     >
-      <div className="flex flex-col gap-6 py-20">
+      <div className="flex w-full flex-col gap-6 py-20">
         <Button
           type="button"
           size="icon"
@@ -55,6 +56,8 @@ export default function Sidebar() {
           <UserSearch01Icon size={20} />
         </Button>
       </div>
+
+      <ToggleColorButton />
     </aside>
   );
 }

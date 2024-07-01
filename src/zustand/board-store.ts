@@ -22,6 +22,25 @@ interface Action {
     targetStatus: TaskStatus
   ) => void;
   addTask: (task: Task) => void;
+  /**
+   * Edit a selected task
+   *
+   * @param {number} id - The task id
+   * @param {string} title - The task title
+   * @param {string} description - The task description
+   * @param {TaskStatus} status - The task status
+   */
+  editTask: ({
+    id,
+    title,
+    description,
+    status,
+  }: {
+    id: number;
+    title: string;
+    description: string;
+    status: TaskStatus;
+  }) => void;
 }
 
 const boardStore = create<State & Action>((set) => ({
@@ -115,13 +134,17 @@ const boardStore = create<State & Action>((set) => ({
       const updatedTask = sourceTasks[activeIndex];
       updatedTask.status = targetStatus;
 
+      const tasks = [
+        ...updatedColumns.get(targetStatus)!.tasks.slice(0, targetIndex),
+        updatedTask,
+        ...updatedColumns.get(targetStatus)!.tasks.slice(targetIndex),
+      ];
+
+      const array = arrayMove(tasks, activeIndex, targetIndex);
+
       updatedColumns.set(targetStatus, {
         status: targetStatus,
-        tasks: [
-          ...updatedColumns.get(targetStatus)!.tasks.slice(0, targetIndex),
-          updatedTask,
-          ...updatedColumns.get(targetStatus)!.tasks.slice(targetIndex),
-        ],
+        tasks: array,
       });
 
       return {
@@ -131,7 +154,6 @@ const boardStore = create<State & Action>((set) => ({
       };
     });
   },
-
   addTask: (task) => {
     set((state) => {
       const updatedColumns = new Map(state.board.columns);
@@ -143,7 +165,25 @@ const boardStore = create<State & Action>((set) => ({
         });
       }
 
-      updatedColumns.get(task.status)!.tasks.push(task);
+      updatedColumns.get(task.status)!.tasks.unshift(task);
+
+      return {
+        board: {
+          columns: updatedColumns,
+        },
+      };
+    });
+  },
+  editTask: ({ id, title, description, status }) => {
+    set((state) => {
+      const updatedColumns = new Map(state.board.columns);
+
+      const task = updatedColumns.get(status)!.tasks.find((t) => t.id === id);
+
+      if (task) {
+        task.title = title;
+        task.description = description;
+      }
 
       return {
         board: {

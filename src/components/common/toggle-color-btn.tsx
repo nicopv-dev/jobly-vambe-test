@@ -22,16 +22,14 @@ export default function ToggleColorButton() {
   }, [theme]);
 
   return (
-    <div className="fixed right-2 top-2">
-      <Button
-        type="button"
-        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        size={'icon'}
-        variant={theme === 'light' ? 'default' : 'ghost'}
-        className="shadow-lg dark:bg-gray-900"
-      >
-        <Idea01Icon />
-      </Button>
-    </div>
+    <Button
+      type="button"
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      size={'icon'}
+      variant={theme === 'light' ? 'default' : 'ghost'}
+      className="border border-purple-500/10 shadow-sm shadow-purple-600/30 transition-all duration-200 ease-in-out hover:shadow-xl hover:shadow-purple-600/40 dark:bg-gray-900"
+    >
+      <Idea01Icon />
+    </Button>
   );
 }

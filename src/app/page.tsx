@@ -1,18 +1,17 @@
-import ToggleColorButton from '@/components/common/toggle-color-btn';
 import Board from '@/components/dashboard/board';
 import Sidebar from '@/components/dashboard/sidebar';
-import Wrapper from '@/components/ui/wrapper';
+import NavigationMenu from '@/components/mobile/navigation-menu';
 
 export default function Home() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <ToggleColorButton />
-      <main className="flex min-h-screen grow justify-center bg-zinc-50 first-line:overflow-y-hidden dark:bg-gray-800">
-        <Wrapper className="pt-10">
+    <div className="flex flex-col">
+      <NavigationMenu />
+      <div className="flex overflow-x-hidden">
+        <Sidebar />
+        <main className="flex h-screen w-full justify-center bg-zinc-50 pl-4 first-line:overflow-y-hidden dark:bg-gray-800 md:pl-28">
           <Board />
-        </Wrapper>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

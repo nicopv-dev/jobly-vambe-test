@@ -68,7 +68,7 @@
   }
 
   ::-webkit-scrollbar:horizontal {
-    height: 8px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-thumb {

@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
-import { cn, getColorByStatus } from '@/lib/utils';
+import { useMemo, useState } from 'react';
+import { cn, generateRandomId, getColorByStatus } from '@/lib/utils';
 import ColumnType from '@/types/column';
 import { Button } from '../ui/button';
 import { Add01Icon } from 'hugeicons-react';
@@ -9,6 +9,9 @@ import Card from './card';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Task from '@/types/task';
+import { useBoardStore } from '@/zustand/board-store';
+import { AnimatePresence } from 'framer-motion';
+import CreateTaskForm from '../form/create-task-form';
 
 interface ColumnProps {
   /**
@@ -29,7 +32,7 @@ interface ColumnProps {
  */
 export default function Column({ column, tasks }: ColumnProps) {
   const { status } = column;
-
+  const [presentNewTask, setPresentNewTask] = useState<boolean>(false);
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
       id: status,
@@ -39,6 +42,7 @@ export default function Column({ column, tasks }: ColumnProps) {
       },
       disabled: true,
     });
+  const { addTask } = useBoardStore();
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -48,13 +52,17 @@ export default function Column({ column, tasks }: ColumnProps) {
   const tasksIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
   const className = useMemo(() => getColorByStatus(column.status), [column]);
 
+  const closePresentNewTask = () => {
+    setPresentNewTask(false);
+  };
+
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} className="pb-4">
       <div
         {...attributes}
         {...listeners}
         className={cn(
-          'flex max-h-[80vh] flex-col gap-4 rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900',
+          'flex h-[80vh] w-full flex-col gap-4 overflow-y-auto rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900 sm:w-96 lg:w-[420px]',
           className
         )}
       >
@@ -69,18 +77,27 @@ export default function Column({ column, tasks }: ColumnProps) {
             size="icon"
             variant="outline"
             className="dark:bg-gray-900"
+            onClick={() => setPresentNewTask(true)}
           >
             <Add01Icon size={16} className="text-black dark:text-white" />
           </Button>
         </div>
 
-        <div className="flex h-[80vh] flex-col gap-3 overflow-y-auto">
+        <ul className="flex flex-col gap-3">
           <SortableContext items={tasksIds}>
-            {tasks.map((task) => (
-              <Card key={task.id} task={task} />
-            ))}
+            <AnimatePresence>
+              {presentNewTask && (
+                <CreateTaskForm
+                  closeNewTaskForm={closePresentNewTask}
+                  status={status}
+                />
+              )}
+              {tasks.map((task) => (
+                <Card key={task.id} task={task} />
+              ))}
+            </AnimatePresence>
           </SortableContext>
-        </div>
+        </ul>
       </div>
     </div>
   );
