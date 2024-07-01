@@ -13,7 +13,15 @@ interface State {
 }
 
 interface Action {
+  /**
+   * Load board into app
+   */
   loadBoard: () => void;
+  /**
+   * Remove a task by task id
+   *
+   * @param {number} taskId - Task id
+   */
   removeTask: (taskId: number) => void;
   moveTask: (
     taskId: number,
@@ -21,6 +29,11 @@ interface Action {
     sourceStatus: TaskStatus,
     targetStatus: TaskStatus
   ) => void;
+  /**
+   * Create task
+   *
+   * @param {Task} task - Task data
+   */
   addTask: (task: Task) => void;
   /**
    * Edit a selected task
@@ -48,7 +61,6 @@ const boardStore = create<State & Action>((set) => ({
     columns: new Map<TaskStatus, ColumnType>(),
   },
   loadBoard: () => {
-    // GROUP TASK BY STATUS
     const groupedTasks = TASKS.reduce((acc, task) => {
       if (task && !acc.get(task.status)) {
         acc.set(task.status, {

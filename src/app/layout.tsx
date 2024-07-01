@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import './globals.css';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const font = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' });
 
@@ -16,7 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={font.className}>{children}</body>
+      <TooltipProvider>
+        <body className={font.className}>{children}</body>
+      </TooltipProvider>
     </html>
   );
 }

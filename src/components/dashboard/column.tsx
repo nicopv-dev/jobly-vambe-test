@@ -62,7 +62,7 @@ export default function Column({ column, tasks }: ColumnProps) {
         {...attributes}
         {...listeners}
         className={cn(
-          'flex h-[80vh] w-full flex-col gap-4 overflow-y-auto rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900 sm:w-96 lg:w-[420px]',
+          'flex h-[80vh] w-full flex-col gap-4 overflow-y-auto overflow-x-hidden rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900 sm:w-96 lg:w-[420px]',
           className
         )}
       >
