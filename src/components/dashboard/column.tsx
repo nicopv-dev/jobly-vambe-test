@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { cn, generateRandomId, getColorByStatus } from '@/lib/utils';
 import ColumnType from '@/types/column';
 import { Button } from '../ui/button';
-import { Add01Icon } from 'hugeicons-react';
+import { Add01Icon, CancelCircleIcon } from 'hugeicons-react';
 import Card from './card';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -42,7 +42,6 @@ export default function Column({ column, tasks }: ColumnProps) {
       },
       disabled: true,
     });
-  const { addTask } = useBoardStore();
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -62,7 +61,7 @@ export default function Column({ column, tasks }: ColumnProps) {
         {...attributes}
         {...listeners}
         className={cn(
-          'flex h-[80vh] w-full flex-col gap-4 overflow-y-auto overflow-x-hidden rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900 sm:w-96 lg:w-[420px]',
+          'flex h-[80vh] w-80 flex-col gap-4 overflow-y-auto overflow-x-hidden rounded-md border-t-2 bg-white px-4 py-6 shadow-md backdrop-blur-md dark:bg-gray-900 sm:w-96 lg:w-[420px]',
           className
         )}
       >
@@ -82,22 +81,28 @@ export default function Column({ column, tasks }: ColumnProps) {
             <Add01Icon size={16} className="text-black dark:text-white" />
           </Button>
         </div>
-
-        <ul className="flex flex-col gap-3">
-          <SortableContext items={tasksIds}>
-            <AnimatePresence>
-              {presentNewTask && (
-                <CreateTaskForm
-                  closeNewTaskForm={closePresentNewTask}
-                  status={status}
-                />
-              )}
-              {tasks.map((task) => (
-                <Card key={task.id} task={task} />
-              ))}
-            </AnimatePresence>
-          </SortableContext>
-        </ul>
+        {presentNewTask && (
+          <CreateTaskForm
+            closeNewTaskForm={closePresentNewTask}
+            status={status}
+          />
+        )}
+        {tasks.length > 0 ? (
+          <ul className="flex flex-col gap-3">
+            <SortableContext items={tasksIds}>
+              <AnimatePresence>
+                {tasks.map((task) => (
+                  <Card key={task.id} task={task} />
+                ))}
+              </AnimatePresence>
+            </SortableContext>
+          </ul>
+        ) : (
+          <div className="flex h-full items-center justify-center gap-1 text-gray-800 dark:text-gray-400">
+            <CancelCircleIcon size={12} />
+            <span className="text-sm">No tasks</span>
+          </div>
+        )}
       </div>
     </div>
   );

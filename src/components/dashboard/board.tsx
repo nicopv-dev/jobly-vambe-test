@@ -24,6 +24,7 @@ import Card from './card';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/zustand/theme-store';
 import ColumnType from '@/types/column';
+import Spinner from '../ui/spinner';
 
 /**
  * This component rendering a board kanban.
@@ -31,7 +32,7 @@ import ColumnType from '@/types/column';
  * @returns {React.ReactNode} The card component.
  */
 export default function Board() {
-  const { loadBoard, board, moveTask } = useBoardStore();
+  const { loadBoard, board, moveTask, isLoadingBoard } = useBoardStore();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [isClient, setIsClient] = useState<boolean>(false);
   const { theme } = useThemeStore();
@@ -124,34 +125,41 @@ export default function Board() {
           'text-white': theme === 'dark',
         })}
       >
-        Welcome, to my dashboard
+        Welcome, to my <span className="text-purple-500">dashboard</span>
       </h2>
-      <DndContext
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        sensors={sensors}
-        collisionDetection={closestCorners}
-      >
-        <div className="space-y-4">
-          {/* <h3>Board</h3> */}
-
-          <div className="grid grow auto-cols-max grid-flow-col gap-4 overflow-x-auto overflow-y-auto py-4">
-            <SortableContext items={columnsIds}>
-              {Array.from(board.columns.entries()).map(([_, col], index) => (
-                <Column key={index} column={col} tasks={col.tasks} />
-              ))}
-            </SortableContext>
-          </div>
+      {isLoadingBoard ? (
+        <div className="flex h-[80vh] items-center justify-center">
+          <Spinner />
         </div>
+      ) : (
+        <DndContext
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          sensors={sensors}
+          collisionDetection={closestCorners}
+        >
+          <div className="space-y-4">
+            {/* <h3>Board</h3> */}
 
-        {isClient &&
-          createPortal(
-            <DragOverlay>
-              {activeTask ? <Card task={activeTask} /> : null}
-            </DragOverlay>,
-            document.body
-          )}
-      </DndContext>
+            <div className="grid grow auto-cols-max grid-flow-col gap-4 overflow-x-auto overflow-y-auto py-4">
+              <SortableContext items={columnsIds}>
+                {Array.from(board.columns.entries()).map(([_, col], index) => (
+                  <Column key={index} column={col} tasks={col.tasks} />
+                ))}
+              </SortableContext>
+            </div>
+          </div>
+
+          {/* Show a drag overlay when a task is drawing */}
+          {isClient &&
+            createPortal(
+              <DragOverlay>
+                {activeTask ? <Card task={activeTask} /> : null}
+              </DragOverlay>,
+              document.body
+            )}
+        </DndContext>
+      )}
     </div>
   );
 }

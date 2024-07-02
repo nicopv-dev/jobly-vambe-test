@@ -7,6 +7,13 @@ import { arrayMove } from '@dnd-kit/sortable';
 import Task from '@/types/task';
 
 interface State {
+  /**
+   * Evaluate if board is loading or not
+   */
+  isLoadingBoard: boolean;
+  /**
+   * Board data
+   */
   board: {
     columns: Map<TaskStatus, ColumnType>;
   };
@@ -57,6 +64,7 @@ interface Action {
 }
 
 const boardStore = create<State & Action>((set) => ({
+  isLoadingBoard: true,
   board: {
     columns: new Map<TaskStatus, ColumnType>(),
   },
@@ -80,7 +88,7 @@ const boardStore = create<State & Action>((set) => ({
       columns: groupedTasks,
     };
 
-    set({ board });
+    set({ board, isLoadingBoard: false });
   },
   removeTask: (taskId: number) => {
     set((state) => {
@@ -190,12 +198,16 @@ const boardStore = create<State & Action>((set) => ({
     set((state) => {
       const updatedColumns = new Map(state.board.columns);
 
-      const task = updatedColumns.get(status)!.tasks.find((t) => t.id === id);
+      // Clona la columna para evitar la mutación directa
+      const column = updatedColumns.get(status);
+      if (!column) return state;
 
-      if (task) {
-        task.title = title;
-        task.description = description;
-      }
+      const updatedTasks = column.tasks.map((task) =>
+        task.id === id ? { ...task, title, description } : task
+      );
+
+      // Actualiza la columna con las tareas actualizadas
+      updatedColumns.set(status, { ...column, tasks: updatedTasks });
 
       return {
         board: {

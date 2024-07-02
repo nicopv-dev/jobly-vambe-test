@@ -15,12 +15,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { useBoardStore } from '@/zustand/board-store';
 import { TrashIcon } from 'lucide-react';
 import { cn, generateRandomId } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -32,7 +27,7 @@ interface CardProps {
 }
 
 /**
- * Tihs component rendering a card with the task information.
+ * This component renders a card with the task information.
  *
  * @param {CardProps} props - The props for the component.
  * @returns {React.ReactNode} The card component.
@@ -78,16 +73,13 @@ export default function Card({ task }: CardProps) {
 
   const editTaskSubmit: SubmitHandler<TaskForm> = ({ title, description }) => {
     editTask({
-      id: generateRandomId(),
+      id, // Usa el ID existente en lugar de generar uno nuevo
       title,
       description,
       status,
     });
     setIsEditable(false);
   };
-
-  const title = watch('title');
-  const description = watch('description');
 
   const onCancel = () => {
     reset();

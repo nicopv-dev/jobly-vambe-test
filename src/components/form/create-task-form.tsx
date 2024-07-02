@@ -1,4 +1,8 @@
-import { MultiplicationSignIcon, TickDouble02Icon } from 'hugeicons-react';
+import {
+  MultiplicationSignIcon,
+  Task01Icon,
+  TickDouble02Icon,
+} from 'hugeicons-react';
 import { Button } from '../ui/button';
 import { useBoardStore } from '@/zustand/board-store';
 import { generateRandomId } from '@/lib/utils';
@@ -52,6 +56,10 @@ export default function CreateTaskForm({
       className="flex flex-col gap-2 rounded-md border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 ease-in-out hover:border-purple-400 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
       onSubmit={handleSubmit(createNewTask)}
     >
+      <div className="flex items-center gap-1 text-black dark:text-white">
+        <Task01Icon size={14} />
+        <h4 className="text-sm font-semibold">New task</h4>
+      </div>
       <input
         type="text"
         placeholder="Enter task name"

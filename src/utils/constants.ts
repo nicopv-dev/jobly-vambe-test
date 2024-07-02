@@ -3,52 +3,30 @@ import Task from '@/types/task';
 export const TASKS: Task[] = [
   {
     id: 1,
-    title: 'Task 1',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit.`,
+    title: '[BACKEND] Conection database',
+    description: `Connect proyjecto with Postgresql`,
     status: 'To do',
     position: 1,
   },
   {
     id: 2,
-    title: 'Task 2',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit.`,
+    title: '[FRONTEND] Create project with Next.js',
+    description: `Create project with Next.js v14 with typescript💎`,
     status: 'In progress',
     position: 1,
   },
   {
     id: 3,
-    title: 'Task 3',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit.`,
+    title: '[UX] Create web design',
+    description: `Create web design with figma web - responsive version`,
     status: 'Done',
     position: 1,
   },
   {
     id: 4,
-    title: 'Task 4',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit.`,
+    title: '[DB] Create database diagram model',
+    description: `Create database diagram model with web resource (DB Diagram)`,
     status: 'To do',
-    position: 2,
-  },
-  {
-    id: 5,
-    title: 'Task 5',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit.`,
-    status: 'To do',
-    position: 3,
-  },
-  {
-    id: 6,
-    title: 'Task 6',
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-    suscipit, debitis fugit expedita molestiae sapiente, laudantium
-    impedit consequatur et veniam architecto hic at non voluptatibus
-    officia magni velit eum! Voluptas?`,
-    status: 'Done',
     position: 2,
   },
 ];
